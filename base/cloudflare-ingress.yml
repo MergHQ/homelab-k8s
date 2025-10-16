@@ -11,6 +11,8 @@ spec:
     path: helm/cloudflare-tunnel-ingress-controller
     helm:
       values: |
+        image:
+          tag: 0.0.18
         cloudflare:
           secretRef:
             name: cloudflare-secrets
