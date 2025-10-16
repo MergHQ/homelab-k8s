@@ -7,7 +7,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/STRRL/cloudflare-tunnel-ingress-controller.git
-    targetRevision: main
+    targetRevision: master
     path: helm/cloudflare-tunnel-ingress-controller
     helm:
       values: |
