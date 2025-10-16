@@ -14,7 +14,7 @@ spec:
         cloudflare:
           secretRef:
             name: cloudflare-secrets
-            apiTokenKey: api-token
+            apiTokenKey: api-key
             accountIDKey: account-id
             tunnelNameKey: tunnel-name
   destination:
