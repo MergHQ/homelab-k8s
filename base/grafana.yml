@@ -1,0 +1,41 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: grafana
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://grafana.github.io/helm-charts 
+    chart: grafana
+    targetRevision: 10.1.1
+    helm:
+      values: |
+        persistence:
+          enabled: true
+          storageClassName: longhorn
+          accessModes:
+            - ReadWriteOnce
+          size: 1Gi
+        admin:
+          existingSecret: grafana-secrets
+        service:
+          enabled: true
+          annotations:
+            tunnel.cloudflare.com/ingress-hostname: ruuvit.hugis.dev
+        ingress:
+          enabled: true
+          hosts:
+            - ruuvit.hugis.dev
+          annotations:
+            kubernetes.io/ingress.class: cloudflare-tunnel
+          
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: grafana
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
