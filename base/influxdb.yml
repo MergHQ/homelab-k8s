@@ -1,0 +1,40 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: influxdb
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://helm.influxdata.com/
+    chart: influxdb2
+    targetRevision: 2.1.2 
+    helm:
+      values: |
+        persistence:
+          enabled: true
+          storageClass: longhorn
+          accessMode: ReadWriteOnce
+          size: 8Gi
+        adminUser:
+          existingSecret: influxdb-secrets
+        service:
+          enabled: true
+          annotations:
+            tunnel.cloudflare.com/ingress-hostname: influx.hugis.dev
+        ingress:
+          enabled: true
+          hostname: influx.hugis.dev
+          className: cloudflare-tunnel
+          annotations:
+            kubernetes.io/ingress.class: cloudflare-tunnel
+          
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: influxdb 
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
